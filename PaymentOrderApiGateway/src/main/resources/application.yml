@@ -1,0 +1,36 @@
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    hostname: localhost
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health
+  health:
+    circuitbreakers:
+      enabled: true
+
+spring:
+  config:
+    import:
+    - optional:configserver:http://localhost:9123
+resilience4j:
+  circuitbreaker:
+    instances:
+      gatewayBreaker: 
+        permitted-number-of-calls-in-half-open-state: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        sliding-window-type: count-based
+        sliding-window-size: 10
+        wait-duration-in-open-state: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+

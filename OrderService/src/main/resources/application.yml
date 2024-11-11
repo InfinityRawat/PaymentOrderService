@@ -1,0 +1,59 @@
+
+#services:
+#  urls:
+#    paymentUrl: http://PaymentService/paymentControl/api/v1/doPayment
+
+services:
+ urls:
+  paymentUrl:
+   http://PaymentService/paymentControl/api/v1/doPayment
+  orderUrl:
+   http://OrderService/order/api/v1/save
+  MyUrl:
+    thisisComingFromLocal
+eureka:
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+    instance:
+      hostname: localhost
+
+spring:
+  config:
+    import:
+    - optional:configserver:http://localhost:9123
+
+  datasource:
+    username: root
+    password: password
+    url: jdbc:mysql://localhost:3306/newdb
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  
+ 
+server:
+  port: 8083
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  health:
+    circuitbreakers:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentOrderBreaker: 
+        register-health-indicator: true
+        wait-duration-in-open-state: 10
+        automatic-transition-from-open-to-half-open-enabled: true
+        max-wait-duration-in-half-open-state: 5
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        sliding-window-size: 10
+        sliding-window-type: count-based

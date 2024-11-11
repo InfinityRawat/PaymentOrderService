@@ -1,0 +1,27 @@
+
+
+spring:
+  datasource:
+    username: root
+    password: password
+    url: jdbc:mysql://localhost:3306/identityDb
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+  cloud:
+    discovery:
+      client:
+        health-indicator:
+          enabled: true
+eureka:
+    client:
+      register-with-eureka: true
+      fetch-registry: true
+    instance:
+      hostname: localhost
+              
+server:
+  port: 9090
+
